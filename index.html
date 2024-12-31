@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TICK - Luxury Watch Market</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <script>
+        // Variant content configuration
+        const variants = {
+            quickSell: {
+                id: 'quickSell',
+                heading: 'Sell Your Luxury Watch in 24 Hours',
+                subheading: 'Get an instant offer for your luxury timepiece. No hassle, no waiting.',
+                ctaText: 'Get Instant Offer',
+                trustIndicators: [
+                    { value: '24h', label: 'Quick Purchase Decision' },
+                    { value: '100%', label: 'Secure Transaction' },
+                    { value: '₦', label: 'Best Market Prices' }
+                ]
+            },
+            valuation: {
+                id: 'valuation',
+                heading: 'Know Your Watch\'s True Value',
+                subheading: 'Get a professional valuation of your luxury timepiece based on current market data.',
+                ctaText: 'Get Free Valuation',
+                trustIndicators: [
+                    { value: 'Free', label: 'Expert Valuation' },
+                    { value: '1000+', label: 'Watches Evaluated' },
+                    { value: '₦', label: 'Market-Based Pricing' }
+                ]
+            },
+            verified: {
+                id: 'verified',
+                heading: 'Buy Pre-owned Luxury Watches with Confidence',
+                subheading: 'Every watch is authenticated and verified by our experts. 100% genuine guaranteed.',
+                ctaText: 'Start Your Purchase',
+                trustIndicators: [
+                    { value: '100%', label: 'Authenticity Guaranteed' },
+                    { value: '12mo', label: 'Warranty Included' },
+                    { value: '₦', label: 'Best Market Prices' }
+                ]
+            }
+        };
+
+        // Function to get random variant or use URL parameter
+        function getVariant() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const variantParam = urlParams.get('variant');
+            
+            if (variantParam && variants[variantParam]) {
+                return variants[variantParam];
+            }
+            
+            const variantKeys = Object.keys(variants);
+            const randomIndex = Math.floor(Math.random() * variantKeys.length);
+            return variants[variantKeys[randomIndex]];
+        }
+
+        // Function to update content based on variant
+        function updateContent(variant) {
+            document.getElementById('main-heading').textContent = variant.heading;
+            document.getElementById('sub-heading').textContent = variant.subheading;
+            document.getElementById('cta-button').textContent = variant.ctaText;
+            
+            const trustContainer = document.getElementById('trust-indicators');
+            trustContainer.innerHTML = variant.trustIndicators.map(indicator => `
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-gray-900">${indicator.value}</div>
+                    <div class="mt-2 text-sm text-gray-500">${indicator.label}</div>
+                </div>
+            `).join('');
+
+            // Log variant for analytics
+            console.log('Variant displayed:', variant.id);
+            // Send to analytics (implement your tracking here)
+            trackVariant(variant.id);
+        }
+
+        // Analytics tracking function
+        function trackVariant(variantId) {
+            // Implement your analytics tracking here
+            // Example: Google Analytics
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'variant_view', {
+                    'variant_id': variantId
+                });
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const variant = getVariant();
+            updateContent(variant);
+
+            // Handle form submission
+            document.getElementById('watchForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const data = {
+                    variant: variant.id,
+                    timestamp: new Date().toISOString(),
+                };
+                
+                for (let [key, value] of formData.entries()) {
+                    data[key] = value;
+                }
+
+                // Log submission
+                console.log('Form submitted:', data);
+                // Here you would send to your Google Sheet
+                alert('Form submitted! This would connect to your Google Sheet backend.');
+            });
+        });
+    </script>
+
+    <header class="bg-white shadow-sm">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <!-- Logo SVG here -->
+                        <svg class="h-12 w-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80">
+                            <!-- Watch Face Circle -->
+                            <circle cx="40" cy="40" r="35" fill="none" stroke="#1A1A1A" stroke-width="2"/>
+                            <!-- Hour Markers -->
+                            <g stroke="#1A1A1A" stroke-width="2">
+                                <line x1="40" y1="10" x2="40" y2="15"/>
+                                <line x1="70" y1="40" x2="65" y2="40"/>
+                                <line x1="40" y1="70" x2="40" y2="65"/>
+                                <line x1="10" y1="40" x2="15" y2="40"/>
+                            </g>
+                            <!-- Watch Hands -->
+                            <g stroke="#1A1A1A" stroke-width="2">
+                                <line x1="40" y1="40" x2="40" y2="25" stroke-linecap="round"/>
+                                <line x1="40" y1="40" x2="55" y2="40" stroke-linecap="round"/>
+                            </g>
+                            <!-- Center Dot -->
+                            <circle cx="40" cy="40" r="2" fill="#1A1A1A"/>
+                            <!-- Text "TICK" -->
+                            <text x="85" y="55" font-family="Arial, sans-serif" font-size="38" font-weight="bold" fill="#1A1A1A">
+                                TICK
+                            </text>
+                            <!-- Luxury Watch Market tagline -->
+                            <text x="85" y="70" font-family="Arial, sans-serif" font-size="12" fill="#666666">
+                                LUXURY WATCH MARKET
+                            </text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <!-- Hero Section with Dynamic Content -->
+            <div class="text-center">
+                <h1 id="main-heading" class="text-4xl font-bold text-gray-900 mb-4">
+                    <!-- Dynamically inserted -->
+                </h1>
+                <p id="sub-heading" class="text-xl text-gray-600 mb-8">
+                    <!-- Dynamically inserted -->
+                </p>
+            </div>
+
+            <!-- Form Section -->
+            <div class="max-w-xl mx-auto bg-white shadow rounded-lg p-8">
+                <form id="watchForm" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">
+                            Watch Brand
+                        </label>
+                        <select name="brand" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="">Select Brand</option>
+                            <option value="rolex">Rolex</option>
+                            <option value="patek">Patek Philippe</option>
+                            <option value="ap">Audemars Piguet</option>
+                            <option value="omega">Omega</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">
+                            Model
+                        </label>
+                        <input type="text" name="model" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">
+                            Year
+                        </label>
+                        <input type="number" name="year" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">
+                            Condition
+                        </label>
+                        <select name="condition" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="excellent">Excellent</option>
+                            <option value="good">Good</option>
+                            <option value="fair">Fair</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">
+                            Your Email
+                        </label>
+                        <input type="email" name="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">
+                            Phone Number
+                        </label>
+                        <input type="tel" name="phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <button type="submit" id="cta-button" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <!-- Dynamically inserted -->
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Trust Indicators (Dynamically populated) -->
+            <div id="trust-indicators" class="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
+                <!-- Dynamically inserted -->
+            </div>
+        </div>
+    </main>
+</body>
+</html>
